@@ -1,0 +1,79 @@
+[
+  {
+    "id": "j1",
+    "name": "Diamond Teardrop Necklace",
+    "stockQuantity": 50,
+    "inStock": true,
+    "updatedAt": "2026-02-04T14:49:05.760Z"
+  },
+  {
+    "id": "j2",
+    "name": "Golden Infinity Bracelet",
+    "stockQuantity": 75,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "j3",
+    "name": "Emerald & Sapphire Earrings",
+    "stockQuantity": 40,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "j4",
+    "name": "Diamond Halo Ring",
+    "stockQuantity": 30,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "j5",
+    "name": "Charm Anklet Collection",
+    "stockQuantity": 100,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "j6",
+    "name": "Pearl & Gemstone Brooch",
+    "stockQuantity": 60,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "j7",
+    "name": "Cuban Link Chain",
+    "stockQuantity": 50,
+    "inStock": true,
+    "updatedAt": "2026-02-04T15:01:31.934Z"
+  },
+  {
+    "id": "c1",
+    "name": "Gold Embroidered Evening Gown",
+    "stockQuantity": 35,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "c2",
+    "name": "Gold Button Blazer",
+    "stockQuantity": 80,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "c3",
+    "name": "Gold Embroidered Silk Blouse",
+    "stockQuantity": 100,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  },
+  {
+    "id": "c4",
+    "name": "Gold & Black Evening Clutch",
+    "stockQuantity": 120,
+    "inStock": true,
+    "updatedAt": "2026-02-04T00:00:00.000Z"
+  }
+]
