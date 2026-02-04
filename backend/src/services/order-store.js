@@ -110,8 +110,11 @@ export const updateOrder = async (orderId, patch) => {
       { $set: updatedOrder },
       { returnDocument: "after" }
     );
-
-    return mapMongoOrder(result.value);
+    // MongoDB Node driver versions differ here:
+    // - older: { value: doc }
+    // - newer: doc directly
+    const updatedDoc = result?.value ?? result;
+    return mapMongoOrder(updatedDoc);
   }
 
   const orders = await readOrders();
