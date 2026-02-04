@@ -352,7 +352,13 @@ export const sendOrderEmails = async (order, subjectPrefix = "New") => {
   }
 };
 
-export const queueOrderEmails = (order, subjectPrefix = "New") => {
+export const queueOrderEmails = async (order, subjectPrefix = "New") => {
+  // Serverless runtimes may stop immediately after response, so send inline on Vercel.
+  if (process.env.VERCEL === "1") {
+    await sendOrderEmails(order, subjectPrefix);
+    return;
+  }
+
   setImmediate(() => {
     void sendOrderEmails(order, subjectPrefix);
   });

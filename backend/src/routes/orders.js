@@ -49,7 +49,7 @@ router.patch("/:orderId/status", async (req, res) => {
     }
 
     if (status === "completed") {
-      queueOrderEmails(updated, "Completed");
+      await queueOrderEmails(updated, "Completed");
     }
 
     return res.json({ order: updated });
@@ -89,8 +89,7 @@ router.post("/offline", async (req, res) => {
 
     await saveOrder(order);
 
-    // Queue email in background so checkout response is immediate.
-    queueOrderEmails(order);
+    await queueOrderEmails(order);
 
     return res.status(201).json({ orderId: order.id });
   } catch (error) {
