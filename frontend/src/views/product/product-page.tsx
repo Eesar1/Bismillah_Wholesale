@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ShoppingCart, Star } from "lucide-react";
 import Wrapper from "@/components/wrapper";
@@ -27,6 +27,8 @@ const ProductPage = () => {
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const dragStartXRef = useRef<number | null>(null);
   const [reviewForm, setReviewForm] = useState({
     name: "",
     email: "",
@@ -47,6 +49,11 @@ const ProductPage = () => {
     return products
       .filter((item) => item.category === product.category && item.id !== product.id)
       .slice(0, 4);
+  }, [product]);
+
+  const productImages = useMemo(() => {
+    if (!product) return [];
+    return product.images && product.images.length > 0 ? product.images : [product.image];
   }, [product]);
 
   useEffect(() => {
@@ -107,6 +114,7 @@ const ProductPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setIsTransitioning(false);
     setIsReady(false);
+    setActiveImageIndex(0);
     const timer = window.setTimeout(() => setIsReady(true), 40);
     return () => window.clearTimeout(timer);
   }, [slug]);
@@ -122,6 +130,38 @@ const ProductPage = () => {
     window.setTimeout(() => {
       navigate(`/product/${targetSlug}`);
     }, 160);
+  };
+
+  const handlePointerDown = (event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    const clientX = "touches" in event ? event.touches[0]?.clientX : event.clientX;
+    dragStartXRef.current = clientX ?? null;
+  };
+
+  const handlePointerMove = (event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (dragStartXRef.current === null || productImages.length <= 1) {
+      return;
+    }
+
+    const clientX = "touches" in event ? event.touches[0]?.clientX : event.clientX;
+    if (clientX === undefined) return;
+
+    const delta = clientX - dragStartXRef.current;
+    const threshold = 40;
+
+    if (Math.abs(delta) < threshold) {
+      return;
+    }
+
+    dragStartXRef.current = clientX;
+    setActiveImageIndex((current) => {
+      const nextIndex = delta > 0 ? current - 1 : current + 1;
+      const total = productImages.length;
+      return (nextIndex + total) % total;
+    });
+  };
+
+  const handlePointerUp = () => {
+    dragStartXRef.current = null;
   };
 
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -190,8 +230,42 @@ const ProductPage = () => {
         </button>
 
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          <div className="aspect-square bg-white/5 border border-gold/20 overflow-hidden">
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+          <div className="space-y-3">
+            <div
+              className="aspect-square bg-white/5 border border-gold/20 overflow-hidden relative"
+              onMouseDown={handlePointerDown}
+              onMouseMove={handlePointerMove}
+              onMouseUp={handlePointerUp}
+              onMouseLeave={handlePointerUp}
+              onTouchStart={handlePointerDown}
+              onTouchMove={handlePointerMove}
+              onTouchEnd={handlePointerUp}
+            >
+              <img
+                src={productImages[activeImageIndex] || product.image}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+              {productImages.length > 1 && (
+                <div className="absolute bottom-3 left-3 bg-black/70 text-white/70 text-xs px-2 py-1">
+                  Drag to rotate
+                </div>
+              )}
+            </div>
+            {productImages.length > 1 && (
+              <div className="grid grid-cols-5 gap-2">
+                {productImages.map((src, index) => (
+                  <button
+                    key={src}
+                    type="button"
+                    onClick={() => setActiveImageIndex(index)}
+                    className={`border ${index === activeImageIndex ? "border-gold" : "border-white/10"} bg-white/5`}
+                  >
+                    <img src={src} alt={`${product.name} view ${index + 1}`} className="w-full h-16 object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-5">
