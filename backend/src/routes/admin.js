@@ -4,20 +4,22 @@ import jwt from "jsonwebtoken";
 const router = Router();
 
 router.post("/login", (req, res) => {
-  const { email, password } = req.body || {};
-  const adminEmail = process.env.ADMIN_EMAIL;
+  const { username, email, password } = req.body || {};
+  const adminUsername = process.env.ADMIN_USERNAME || process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
   const secret = process.env.ADMIN_JWT_SECRET;
 
-  if (!adminEmail || !adminPassword || !secret) {
+  if (!adminUsername || !adminPassword || !secret) {
     return res.status(500).json({ message: "Admin authentication is not configured." });
   }
 
-  if (email !== adminEmail || password !== adminPassword) {
+  const loginId = (typeof username === "string" && username.trim()) || email;
+
+  if (loginId !== adminUsername || password !== adminPassword) {
     return res.status(401).json({ message: "Invalid credentials." });
   }
 
-  const token = jwt.sign({ role: "admin", email: adminEmail }, secret, { expiresIn: "7d" });
+  const token = jwt.sign({ role: "admin", username: adminUsername }, secret, { expiresIn: "7d" });
   return res.json({ token });
 });
 

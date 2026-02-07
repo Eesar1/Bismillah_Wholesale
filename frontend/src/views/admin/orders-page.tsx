@@ -31,7 +31,7 @@ const AdminOrdersPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [authToken, setAuthToken] = useState<string | null>(() => getAdminToken());
-  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const loadOrders = async () => {
@@ -70,10 +70,10 @@ const AdminOrdersPage = () => {
     setError(null);
 
     try {
-      const result = await loginAdmin(loginForm.email.trim(), loginForm.password);
+      const result = await loginAdmin(loginForm.username.trim(), loginForm.password);
       setAdminToken(result.token);
       setAuthToken(result.token);
-      setLoginForm({ email: "", password: "" });
+      setLoginForm({ username: "", password: "" });
     } catch (loginError) {
       setError(loginError instanceof Error ? loginError.message : "Login failed.");
     } finally {
@@ -126,11 +126,12 @@ const AdminOrdersPage = () => {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label className="text-white/70 text-sm">Email</Label>
+              <Label className="text-white/70 text-sm">Username</Label>
               <Input
-                name="email"
-                type="email"
-                value={loginForm.email}
+                name="username"
+                type="text"
+                autoComplete="username"
+                value={loginForm.username}
                 onChange={handleLoginChange}
                 required
                 className="bg-white/5 border-white/20 text-white rounded-none text-sm"

@@ -14,11 +14,11 @@ export const clearAdminToken = () => {
   window.localStorage.removeItem(ADMIN_TOKEN_KEY);
 };
 
-export const loginAdmin = async (email: string, password: string) => {
+export const loginAdmin = async (username: string, password: string) => {
   const response = await fetch(getApiUrl("/api/admin/login"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ username, password }),
   });
 
   if (!response.ok) {
