@@ -73,6 +73,7 @@ export const products: Product[] = [
     name: 'Charm Anklet Collection',
     description: 'Delicate gold anklet featuring heart, star, moon, and lotus charms. Adjustable length for perfect fit.',
     price: 499,
+    
     category: 'jewellery',
     subcategory: 'anklets',
     image: '/images/jewellery-anklet.jpg',
