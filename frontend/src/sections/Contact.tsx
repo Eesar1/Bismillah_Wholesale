@@ -23,7 +23,13 @@ const Contact: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+
+  const emailServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined;
+  const emailTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined;
+  const emailPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined;
+  const emailTo = import.meta.env.VITE_EMAILJS_TO_EMAIL as string | undefined;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -84,27 +90,35 @@ const Contact: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage(null);
 
     try {
+      if (!emailServiceId || !emailTemplateId || !emailPublicKey) {
+        throw new Error('Email service is not configured.');
+      }
+
       await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        emailServiceId,
+        emailTemplateId,
         {
           from_name: formData.name,
           from_email: formData.email,
           phone: formData.phone,
           subject: formData.subject,
           message: formData.message,
+          to_email: emailTo || undefined,
         },
-        'YOUR_USER_ID'
+        emailPublicKey
       );
+      setShowSuccess(true);
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     } catch (error) {
       console.log('Email error:', error);
+      setErrorMessage('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
 
-    setIsSubmitting(false);
-    setShowSuccess(true);
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
   };
 
   const contactInfo = [
@@ -260,6 +274,9 @@ const Contact: React.FC = () => {
                   </>
                 )}
               </Button>
+              {errorMessage && (
+                <p className="mt-3 text-sm text-red-400">{errorMessage}</p>
+              )}
             </form>
           </div>
         </div>
