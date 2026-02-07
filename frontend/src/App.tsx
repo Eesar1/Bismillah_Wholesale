@@ -3,6 +3,8 @@ import RootLayout from "@/app/layout";
 import HomePage from "@/app/page";
 import AdminOrdersPage from "@/views/admin/orders-page";
 import ProductPage from "@/views/product/product-page";
+import PrivacyPolicy from "@/views/legal/privacy-policy";
+import TermsOfService from "@/views/legal/terms-of-service";
 
 const RootLayoutRoute = () => (
   <RootLayout>
@@ -18,6 +20,8 @@ function App() {
         <Route element={<RootLayoutRoute />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/product/:slug" element={<ProductPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
         </Route>
       </Routes>
     </BrowserRouter>

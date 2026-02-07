@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Crown, Instagram, Facebook, Twitter, Linkedin, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
 import Wrapper from '@/components/wrapper';
@@ -9,6 +10,7 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
@@ -143,10 +145,16 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <span suppressHydrationWarning>{currentYear}</span> Bismillah Wholesale. All rights reserved.
             </p>
             <div className="flex items-center gap-4 sm:gap-6">
-              <button className="text-white/40 hover:text-gold text-xs sm:text-sm transition-colors">
+              <button
+                onClick={() => navigate("/privacy-policy")}
+                className="text-white/40 hover:text-gold text-xs sm:text-sm transition-colors"
+              >
                 Privacy Policy
               </button>
-              <button className="text-white/40 hover:text-gold text-xs sm:text-sm transition-colors">
+              <button
+                onClick={() => navigate("/terms-of-service")}
+                className="text-white/40 hover:text-gold text-xs sm:text-sm transition-colors"
+              >
                 Terms of Service
               </button>
               <motion.button
