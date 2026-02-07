@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Eye, Star, ChevronRight, Gem, Shirt } from 'lucide-react';
+import { ShoppingCart, Eye, Star, ChevronRight, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -16,7 +16,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const Products: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<'all' | 'jewellery' | 'clothing'>('all');
+  const [activeCategory, setActiveCategory] = useState<'all' | 'jewellery'>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [availabilityMap, setAvailabilityMap] = useState<Record<string, { inStock: boolean; stockQuantity: number }>>({});
   const { addToCart } = useCart();
@@ -156,8 +156,7 @@ const Products: React.FC = () => {
             Featured <span className="text-gold">Products</span>
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg px-2 sm:px-0">
-            Browse our curated selection of premium jewellery and designer clothing, 
-            available for wholesale with competitive pricing.
+            Browse our curated selection of premium jewellery available for wholesale with competitive pricing.
           </p>
         </div>
 
@@ -166,11 +165,10 @@ const Products: React.FC = () => {
           {[
             { id: 'all', label: 'All Products', icon: null },
             { id: 'jewellery', label: 'Jewellery', icon: Gem },
-            { id: 'clothing', label: 'Clothing', icon: Shirt },
           ].map((category) => (
             <Button
               key={category.id}
-              onClick={() => setActiveCategory(category.id as 'all' | 'jewellery' | 'clothing')}
+              onClick={() => setActiveCategory(category.id as 'all' | 'jewellery')}
               variant={activeCategory === category.id ? 'default' : 'outline'}
               className={`rounded-none px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base ${
                 activeCategory === category.id

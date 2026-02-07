@@ -48,7 +48,15 @@ export interface Order {
   shippingAddress: ShippingAddress;
   items: CartItem[];
   total: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered';
+  status:
+    | 'pending'
+    | 'awaiting_payment'
+    | 'paid'
+    | 'processing'
+    | 'shipping'
+    | 'shipped'
+    | 'completed'
+    | 'cancelled';
   createdAt: Date;
   notes?: string;
 }

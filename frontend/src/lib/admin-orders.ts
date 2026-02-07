@@ -2,7 +2,15 @@ import { getApiUrl, parseApiError } from "@/lib/api";
 import type { CartItem, CustomerInfo } from "@/types";
 
 export type PaymentMethod = "card" | "cod" | "jazzcash" | "easypaisa";
-export type OrderStatus = "pending" | "awaiting_payment" | "paid" | "cancelled" | "processing" | "completed";
+export type OrderStatus =
+  | "pending"
+  | "awaiting_payment"
+  | "paid"
+  | "processing"
+  | "shipping"
+  | "shipped"
+  | "completed"
+  | "cancelled";
 
 export interface AdminOrder {
   id: string;

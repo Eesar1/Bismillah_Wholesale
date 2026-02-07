@@ -187,6 +187,46 @@ const wrapTemplate = ({ title, subtitle, bodyHtml, brandHeaderHtml }) => {
 };
 
 const getCustomerStatusCopy = (status) => {
+  if (status === "shipping") {
+    return {
+      title: "Order On The Way",
+      subtitle: "Your order is out for delivery. We will keep you updated until it arrives.",
+      subject: "Your order is on the way",
+    };
+  }
+
+  if (status === "shipped") {
+    return {
+      title: "Order Shipped",
+      subtitle: "Your order has been shipped and is on its way.",
+      subject: "Your order has been shipped",
+    };
+  }
+
+  if (status === "processing") {
+    return {
+      title: "Order Processing",
+      subtitle: "Your order is being prepared. We will notify you when it ships.",
+      subject: "Your order is being processed",
+    };
+  }
+
+  if (status === "awaiting_payment") {
+    return {
+      title: "Payment Pending",
+      subtitle: "We are waiting for payment confirmation to continue processing your order.",
+      subject: "Payment required for your order",
+    };
+  }
+
+  if (status === "cancelled") {
+    return {
+      title: "Order Cancelled",
+      subtitle: "Your order has been cancelled. If this was a mistake, please contact us.",
+      subject: "Your order has been cancelled",
+    };
+  }
+
   if (status === "completed") {
     return {
       title: "Order Delivered",

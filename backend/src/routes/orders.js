@@ -6,7 +6,16 @@ import { reserveInventoryForOrder } from "../services/inventory-store.js";
 const router = Router();
 
 const validPaymentMethods = ["cod", "jazzcash", "easypaisa", "card"];
-const validStatuses = ["pending", "awaiting_payment", "paid", "cancelled", "processing", "completed"];
+const validStatuses = [
+  "pending",
+  "awaiting_payment",
+  "paid",
+  "processing",
+  "shipping",
+  "shipped",
+  "completed",
+  "cancelled",
+];
 
 const calcTotal = (items) => {
   return items.reduce((sum, item) => {
@@ -48,8 +57,8 @@ router.patch("/:orderId/status", async (req, res) => {
       return res.status(404).json({ message: "Order not found." });
     }
 
-    if (status === "completed") {
-      await queueOrderEmails(updated, "Completed");
+    if (status !== "pending") {
+      await queueOrderEmails(updated, status.replace("_", " ").toUpperCase());
     }
 
     return res.json({ order: updated });

@@ -12,6 +12,8 @@ const statusOptions: OrderStatus[] = [
   "awaiting_payment",
   "paid",
   "processing",
+  "shipping",
+  "shipped",
   "completed",
   "cancelled",
 ];
