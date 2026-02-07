@@ -25,6 +25,8 @@ const ProductPage = () => {
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [reviewForm, setReviewForm] = useState({
     name: "",
     email: "",
@@ -101,9 +103,25 @@ const ProductPage = () => {
     };
   }, [baseProduct]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setIsTransitioning(false);
+    setIsReady(false);
+    const timer = window.setTimeout(() => setIsReady(true), 40);
+    return () => window.clearTimeout(timer);
+  }, [slug]);
+
   const handleAddToCart = () => {
     if (!product) return;
     addToCart(product, 1);
+  };
+
+  const handleNavigateToSlug = (targetSlug: string) => {
+    if (targetSlug === slug) return;
+    setIsTransitioning(true);
+    window.setTimeout(() => {
+      navigate(`/product/${targetSlug}`);
+    }, 160);
   };
 
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -158,7 +176,11 @@ const ProductPage = () => {
   const isSoldOut = !product.inStock || product.stockQuantity <= 0;
 
   return (
-    <section className="py-20 sm:py-24 bg-black min-h-screen">
+    <section
+      className={`py-20 sm:py-24 bg-black min-h-screen transition-all duration-300 ${
+        isReady && !isTransitioning ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+      }`}
+    >
       <Wrapper>
         <button
           onClick={() => navigate("/")}
@@ -313,7 +335,7 @@ const ProductPage = () => {
               {relatedProducts.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => navigate(`/product/${item.slug}`)}
+                  onClick={() => handleNavigateToSlug(item.slug)}
                   className="text-left border border-white/10 bg-white/5 hover:border-gold/50 transition-colors"
                 >
                   <div className="aspect-[4/3] overflow-hidden">
