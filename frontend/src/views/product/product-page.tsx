@@ -28,6 +28,7 @@ const ProductPage = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"gallery" | "spin">("gallery");
   const dragStartXRef = useRef<number | null>(null);
   const [reviewForm, setReviewForm] = useState({
     name: "",
@@ -51,10 +52,22 @@ const ProductPage = () => {
       .slice(0, 4);
   }, [product]);
 
-  const productImages = useMemo(() => {
+  const galleryImages = useMemo(() => {
     if (!product) return [];
     return product.images && product.images.length > 0 ? product.images : [product.image];
   }, [product]);
+
+  const spinImages = useMemo(() => {
+    if (!product?.spinImages) return [];
+    return product.spinImages;
+  }, [product]);
+
+  const currentImages = useMemo(() => {
+    if (viewMode === "spin" && spinImages.length > 0) {
+      return spinImages;
+    }
+    return galleryImages;
+  }, [galleryImages, spinImages, viewMode]);
 
   useEffect(() => {
     let isMounted = true;
@@ -115,9 +128,14 @@ const ProductPage = () => {
     setIsTransitioning(false);
     setIsReady(false);
     setActiveImageIndex(0);
+    setViewMode("gallery");
     const timer = window.setTimeout(() => setIsReady(true), 40);
     return () => window.clearTimeout(timer);
   }, [slug]);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [viewMode]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -138,7 +156,7 @@ const ProductPage = () => {
   };
 
   const handlePointerMove = (event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-    if (dragStartXRef.current === null || productImages.length <= 1) {
+    if (dragStartXRef.current === null || currentImages.length <= 1) {
       return;
     }
 
@@ -155,7 +173,7 @@ const ProductPage = () => {
     dragStartXRef.current = clientX;
     setActiveImageIndex((current) => {
       const nextIndex = delta > 0 ? current - 1 : current + 1;
-      const total = productImages.length;
+      const total = currentImages.length;
       return (nextIndex + total) % total;
     });
   };
@@ -231,6 +249,31 @@ const ProductPage = () => {
 
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                onClick={() => setViewMode("gallery")}
+                className={`rounded-none px-4 py-2 text-xs ${
+                  viewMode === "gallery"
+                    ? "bg-gold text-black"
+                    : "bg-white/5 text-white/70 border border-white/10 hover:border-gold/50"
+                }`}
+              >
+                Gallery
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setViewMode("spin")}
+                disabled={spinImages.length === 0}
+                className={`rounded-none px-4 py-2 text-xs ${
+                  viewMode === "spin"
+                    ? "bg-gold text-black"
+                    : "bg-white/5 text-white/70 border border-white/10 hover:border-gold/50"
+                }`}
+              >
+                360 View
+              </Button>
+            </div>
             <div
               className="aspect-square bg-white/5 border border-gold/20 overflow-hidden relative"
               onMouseDown={handlePointerDown}
@@ -242,19 +285,19 @@ const ProductPage = () => {
               onTouchEnd={handlePointerUp}
             >
               <img
-                src={productImages[activeImageIndex] || product.image}
+                src={currentImages[activeImageIndex] || product.image}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
-              {productImages.length > 1 && (
+              {currentImages.length > 1 && (
                 <div className="absolute bottom-3 left-3 bg-black/70 text-white/70 text-xs px-2 py-1">
-                  Drag to rotate
+                  {viewMode === "spin" ? "Drag to rotate" : "Swipe to view"}
                 </div>
               )}
             </div>
-            {productImages.length > 1 && (
+            {currentImages.length > 1 && (
               <div className="grid grid-cols-5 gap-2">
-                {productImages.map((src, index) => (
+                {currentImages.map((src, index) => (
                   <button
                     key={src}
                     type="button"

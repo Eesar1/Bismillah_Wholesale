@@ -9,6 +9,7 @@ export interface Product {
   subcategory: string;
   image: string;
   images?: string[];
+  spinImages?: string[];
   inStock: boolean;
   stockQuantity: number;
   minOrderQuantity: number;
