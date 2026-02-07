@@ -113,7 +113,7 @@ const AdminOrdersPage = () => {
 
   if (!authToken) {
     return (
-      <div className="min-h-screen bg-black text-white px-4 py-16 sm:px-8">
+      <div className="min-h-screen bg-black text-white px-4 sm:px-8 flex items-center justify-center">
         <div className="max-w-md mx-auto border border-gold/30 bg-white/5 p-6 space-y-4">
           <div>
             <p className="text-gold text-sm uppercase tracking-[0.2em]">Admin Access</p>
