@@ -30,6 +30,8 @@ const ProductPage = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"gallery" | "spin">("gallery");
   const dragStartXRef = useRef<number | null>(null);
+  const lastDragXRef = useRef<number | null>(null);
+  const inertiaRef = useRef<number | null>(null);
   const [reviewForm, setReviewForm] = useState({
     name: "",
     email: "",
@@ -129,9 +131,22 @@ const ProductPage = () => {
     setIsReady(false);
     setActiveImageIndex(0);
     setViewMode("gallery");
+    if (inertiaRef.current) {
+      window.clearInterval(inertiaRef.current);
+      inertiaRef.current = null;
+    }
     const timer = window.setTimeout(() => setIsReady(true), 40);
     return () => window.clearTimeout(timer);
   }, [slug]);
+
+  useEffect(() => {
+    return () => {
+      if (inertiaRef.current) {
+        window.clearInterval(inertiaRef.current);
+        inertiaRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     setActiveImageIndex(0);
@@ -164,13 +179,14 @@ const ProductPage = () => {
     if (clientX === undefined) return;
 
     const delta = clientX - dragStartXRef.current;
-    const threshold = 40;
+    const threshold = 24;
 
     if (Math.abs(delta) < threshold) {
       return;
     }
 
     dragStartXRef.current = clientX;
+    lastDragXRef.current = delta;
     setActiveImageIndex((current) => {
       const nextIndex = delta > 0 ? current - 1 : current + 1;
       const total = currentImages.length;
@@ -180,6 +196,32 @@ const ProductPage = () => {
 
   const handlePointerUp = () => {
     dragStartXRef.current = null;
+    if (inertiaRef.current) {
+      window.clearInterval(inertiaRef.current);
+      inertiaRef.current = null;
+    }
+
+    const lastDelta = lastDragXRef.current || 0;
+    lastDragXRef.current = null;
+
+    if (viewMode !== "spin" || currentImages.length <= 1 || Math.abs(lastDelta) < 30) {
+      return;
+    }
+
+    let momentum = Math.min(220, Math.max(60, Math.abs(lastDelta) * 3));
+    const direction = lastDelta > 0 ? -1 : 1;
+
+    inertiaRef.current = window.setInterval(() => {
+      setActiveImageIndex((current) => {
+        const total = currentImages.length;
+        return (current + direction + total) % total;
+      });
+      momentum -= 20;
+      if (momentum <= 0 && inertiaRef.current) {
+        window.clearInterval(inertiaRef.current);
+        inertiaRef.current = null;
+      }
+    }, 60);
   };
 
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
