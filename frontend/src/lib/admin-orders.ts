@@ -1,5 +1,6 @@
 import { getApiUrl, parseApiError } from "@/lib/api";
 import type { CartItem, CustomerInfo } from "@/types";
+import { getAdminToken } from "@/lib/admin-auth";
 
 export type PaymentMethod = "card" | "cod" | "jazzcash" | "easypaisa";
 export type OrderStatus =
@@ -32,8 +33,16 @@ interface UpdateOrderResponse {
 }
 
 export const listOrders = async () => {
+  const token = getAdminToken();
+  if (!token) {
+    throw new Error("Unauthorized.");
+  }
+
   const response = await fetch(getApiUrl("/api/orders"), {
     method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {
@@ -45,10 +54,16 @@ export const listOrders = async () => {
 };
 
 export const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
+  const token = getAdminToken();
+  if (!token) {
+    throw new Error("Unauthorized.");
+  }
+
   const response = await fetch(getApiUrl(`/api/orders/${orderId}/status`), {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ status }),
   });

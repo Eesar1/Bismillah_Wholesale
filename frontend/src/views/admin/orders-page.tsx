@@ -6,6 +6,10 @@ import {
   type OrderStatus,
 } from "@/lib/admin-orders";
 import { formatPkr } from "@/lib/currency";
+import { clearAdminToken, getAdminToken, loginAdmin, setAdminToken } from "@/lib/admin-auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const statusOptions: OrderStatus[] = [
   "pending",
@@ -26,6 +30,9 @@ const AdminOrdersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(() => getAdminToken());
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const loadOrders = async () => {
     try {
@@ -34,15 +41,52 @@ const AdminOrdersPage = () => {
       const data = await listOrders();
       setOrders(data.orders);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : "Failed to load orders.");
+      const message = loadError instanceof Error ? loadError.message : "Failed to load orders.";
+      if (message.toLowerCase().includes("unauthorized")) {
+        handleLogout();
+      }
+      setError(message);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    void loadOrders();
-  }, []);
+    if (authToken) {
+      void loadOrders();
+    } else {
+      setIsLoading(false);
+    }
+  }, [authToken]);
+
+  const handleLoginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setLoginForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsLoggingIn(true);
+    setError(null);
+
+    try {
+      const result = await loginAdmin(loginForm.email.trim(), loginForm.password);
+      setAdminToken(result.token);
+      setAuthToken(result.token);
+      setLoginForm({ email: "", password: "" });
+    } catch (loginError) {
+      setError(loginError instanceof Error ? loginError.message : "Login failed.");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleLogout = () => {
+    clearAdminToken();
+    setAuthToken(null);
+    setOrders([]);
+    setStatusFilter("all");
+  };
 
   const filteredOrders = useMemo(() => {
     if (statusFilter === "all") {
@@ -57,11 +101,64 @@ const AdminOrdersPage = () => {
       const data = await updateOrderStatus(orderId, status);
       setOrders((current) => current.map((item) => (item.id === orderId ? data.order : item)));
     } catch (updateError) {
-      setError(updateError instanceof Error ? updateError.message : "Failed to update order.");
+      const message = updateError instanceof Error ? updateError.message : "Failed to update order.";
+      if (message.toLowerCase().includes("unauthorized")) {
+        handleLogout();
+      }
+      setError(message);
     } finally {
       setUpdatingId(null);
     }
   };
+
+  if (!authToken) {
+    return (
+      <div className="min-h-screen bg-black text-white px-4 py-16 sm:px-8">
+        <div className="max-w-md mx-auto border border-gold/30 bg-white/5 p-6 space-y-4">
+          <div>
+            <p className="text-gold text-sm uppercase tracking-[0.2em]">Admin Access</p>
+            <h1 className="text-2xl text-white font-semibold" style={{ fontFamily: "Playfair Display, serif" }}>
+              Admin Login
+            </h1>
+          </div>
+
+          {error && <p className="text-red-400 text-sm">{error}</p>}
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <Label className="text-white/70 text-sm">Email</Label>
+              <Input
+                name="email"
+                type="email"
+                value={loginForm.email}
+                onChange={handleLoginChange}
+                required
+                className="bg-white/5 border-white/20 text-white rounded-none text-sm"
+              />
+            </div>
+            <div>
+              <Label className="text-white/70 text-sm">Password</Label>
+              <Input
+                name="password"
+                type="password"
+                value={loginForm.password}
+                onChange={handleLoginChange}
+                required
+                className="bg-white/5 border-white/20 text-white rounded-none text-sm"
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={isLoggingIn}
+              className="w-full bg-gold text-black rounded-none py-4 disabled:opacity-60"
+            >
+              {isLoggingIn ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white px-4 py-8 sm:px-8">
@@ -75,6 +172,13 @@ const AdminOrdersPage = () => {
           </div>
 
           <div className="flex gap-2">
+            <Button
+              type="button"
+              onClick={handleLogout}
+              className="px-4 py-2 border border-gold bg-transparent text-gold text-sm font-semibold"
+            >
+              Logout
+            </Button>
             <select
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as OrderStatus | "all")}

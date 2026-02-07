@@ -2,6 +2,7 @@
 import { createOrderId, saveOrder, listOrders, updateOrder } from "../services/order-store.js";
 import { queueOrderEmails } from "../services/mailer.js";
 import { reserveInventoryForOrder } from "../services/inventory-store.js";
+import { requireAdminAuth } from "../middleware/admin-auth.js";
 
 const router = Router();
 
@@ -25,7 +26,7 @@ const calcTotal = (items) => {
   }, 0);
 };
 
-router.get("/", async (req, res) => {
+router.get("/", requireAdminAuth, async (req, res) => {
   try {
     const { status, paymentMethod, limit } = req.query;
 
@@ -42,7 +43,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.patch("/:orderId/status", async (req, res) => {
+router.patch("/:orderId/status", requireAdminAuth, async (req, res) => {
   try {
     const { orderId } = req.params;
     const { status } = req.body;
