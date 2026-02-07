@@ -119,9 +119,6 @@ const ProductPage = () => {
     return () => window.clearTimeout(timer);
   }, [slug]);
 
-  useEffect(() => {
-    setActiveImageIndex(0);
-  }, [viewMode]);
 
   const handleAddToCart = () => {
     if (!product) return;
