@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Crown, Instagram, Facebook, Twitter, Linkedin, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
 import Wrapper from '@/components/wrapper';
@@ -8,6 +8,12 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -24,8 +30,6 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     { label: 'Earrings', category: 'jewellery' },
     { label: 'Bracelets', category: 'jewellery' },
     { label: 'Rings', category: 'jewellery' },
-    { label: 'Dresses', category: 'clothing' },
-    { label: 'Blazers', category: 'clothing' },
   ];
 
   const socialLinks = [
@@ -135,7 +139,8 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <Wrapper className="py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             <p className="text-white/40 text-xs sm:text-sm text-center sm:text-left">
-              Copyright 2024 Bismillah Wholesale. All rights reserved.
+              Copyright{' '}
+              <span suppressHydrationWarning>{currentYear}</span> Bismillah Wholesale. All rights reserved.
             </p>
             <div className="flex items-center gap-4 sm:gap-6">
               <button className="text-white/40 hover:text-gold text-xs sm:text-sm transition-colors">

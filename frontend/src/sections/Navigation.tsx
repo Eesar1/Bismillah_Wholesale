@@ -14,6 +14,7 @@ interface NavigationProps {
 const Navigation: React.FC<NavigationProps> = ({ onCartClick, onNavigate }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
   const { getItemCount } = useCart();
   const itemCount = getItemCount();
 
@@ -23,6 +24,10 @@ const Navigation: React.FC<NavigationProps> = ({ onCartClick, onNavigate }) => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
   }, []);
 
   const navLinks = [
@@ -135,7 +140,8 @@ const Navigation: React.FC<NavigationProps> = ({ onCartClick, onNavigate }) => {
                 </nav>
                 <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gold/20">
                   <p className="text-white/40 text-sm text-center">
-                    Copyright 2024 Bismillah Wholesale
+                    Copyright{' '}
+                    <span suppressHydrationWarning>{currentYear}</span> Bismillah Wholesale
                   </p>
                 </div>
               </SheetContent>
