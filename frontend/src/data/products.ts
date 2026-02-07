@@ -4,6 +4,7 @@ export const products: Product[] = [
   // Jewellery
   {
     id: 'j1',
+    slug: 'diamond-teardrop-necklace',
     name: 'Diamond Teardrop Necklace',
     description: 'Exquisite 18K gold necklace featuring a brilliant teardrop diamond pendant surrounded by smaller diamonds. Perfect for elegant occasions.',
     price: 2499,
@@ -21,6 +22,7 @@ export const products: Product[] = [
   },
   {
     id: 'j2',
+    slug: 'golden-infinity-bracelet',
     name: 'Golden Infinity Bracelet',
     description: 'Stunning gold bracelet with intricate infinity design, adorned with citrine gemstones and delicate floral patterns.',
     price: 1299,
@@ -37,6 +39,7 @@ export const products: Product[] = [
   },
   {
     id: 'j3',
+    slug: 'emerald-sapphire-earrings',
     name: 'Emerald & Sapphire Earrings',
     description: 'Luxurious drop earrings featuring vibrant emeralds and sapphires set in 18K gold. A statement piece for any collection.',
     price: 1899,
@@ -54,6 +57,7 @@ export const products: Product[] = [
   },
   {
     id: 'j4',
+    slug: 'diamond-halo-ring',
     name: 'Diamond Halo Ring',
     description: 'Elegant diamond ring with a central brilliant-cut diamond surrounded by a halo of smaller diamonds in 18K gold.',
     price: 3299,
@@ -70,6 +74,7 @@ export const products: Product[] = [
   },
   {
     id: 'j5',
+    slug: 'charm-anklet-collection',
     name: 'Charm Anklet Collection',
     description: 'Delicate gold anklet featuring heart, star, moon, and lotus charms. Adjustable length for perfect fit.',
     price: 499,
@@ -87,6 +92,7 @@ export const products: Product[] = [
   },
   {
     id: 'j6',
+    slug: 'pearl-gemstone-brooch',
     name: 'Pearl & Gemstone Brooch',
     description: 'Vintage-inspired brooch featuring lustrous pearls, emeralds, and sapphires in an elegant leaf design.',
     price: 899,
@@ -104,6 +110,7 @@ export const products: Product[] = [
   },
   {
     id: 'j7',
+    slug: 'cuban-link-chain',
     name: 'Cuban Link Chain',
     description: 'Bold and stylish Cuban link chain in solid gold. A timeless piece that makes a powerful statement.',
     price: 4599,
@@ -194,6 +201,10 @@ export const getProductsByCategory = (category: 'jewellery' | 'clothing') => {
 
 export const getProductById = (id: string) => {
   return products.find(product => product.id === id);
+};
+
+export const getProductBySlug = (slug: string) => {
+  return products.find(product => product.slug === slug);
 };
 
 export const getFeaturedProducts = () => {

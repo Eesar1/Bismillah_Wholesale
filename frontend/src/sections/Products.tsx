@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Eye, Star, ChevronRight, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ const Products: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [availabilityMap, setAvailabilityMap] = useState<Record<string, { inStock: boolean; stockQuantity: number }>>({});
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
 
   const mergedProducts = useMemo(() => {
@@ -109,6 +111,10 @@ const Products: React.FC = () => {
 
   const handleAddToCart = (product: Product, quantity: number = 1) => {
     addToCart(product, quantity);
+  };
+
+  const handleViewProduct = (product: Product) => {
+    navigate(`/product/${product.slug}`);
   };
 
   const containerVariants = {
@@ -251,9 +257,13 @@ const Products: React.FC = () => {
                     <span className="text-white/40 text-xs">({product.reviews})</span>
                   </div>
                   
-                  <h3 className="text-white font-semibold text-sm sm:text-base lg:text-lg mb-1 sm:mb-2 group-hover:text-gold transition-colors line-clamp-1">
+                  <button
+                    type="button"
+                    onClick={() => handleViewProduct(product)}
+                    className="text-left text-white font-semibold text-sm sm:text-base lg:text-lg mb-1 sm:mb-2 group-hover:text-gold transition-colors line-clamp-1"
+                  >
                     {product.name}
-                  </h3>
+                  </button>
                   
                   <p className="text-white/50 text-xs sm:text-sm mb-2 sm:mb-4 line-clamp-2">
                     {product.description}
@@ -397,6 +407,16 @@ const Products: React.FC = () => {
                   <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                   {isSelectedSoldOut ? 'Sold Out' : 'Add to Cart'}
                 </Button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedProduct(null);
+                    handleViewProduct(selectedProduct);
+                  }}
+                  className="text-gold text-sm underline underline-offset-4 hover:text-gold-light transition-colors"
+                >
+                  View full details
+                </button>
               </div>
                   </>
                 );
