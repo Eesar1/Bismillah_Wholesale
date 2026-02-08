@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="/" />
     
     <!-- Primary Meta Tags -->
     <title>Bismillah Wholesale | Premium Jewellery in Pakistan</title>
@@ -50,17 +51,6 @@
       #root {
         min-height: 100vh;
       }
-      .app-loader {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.7);
-        font-family: Arial, sans-serif;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        font-size: 12px;
-      }
     </style>
     
     <!-- Performance: Preload critical resources -->
@@ -91,9 +81,7 @@
     </script>
   </head>
   <body>
-    <div id="root">
-      <div class="app-loader">Loading</div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
