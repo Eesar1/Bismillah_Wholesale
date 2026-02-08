@@ -47,7 +47,7 @@ const Products: React.FC = () => {
   // GSAP ScrollTrigger animation
   useEffect(() => {
     let isActive = true;
-    let ctx: import('gsap').Context | undefined;
+    let ctx: { revert: () => void } | undefined;
 
     const initAnimations = async () => {
       const { default: gsap } = await import('gsap');
