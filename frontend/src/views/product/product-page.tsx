@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import ResponsiveImage from "@/components/responsive-image";
 
 const ProductPage = () => {
   const { slug } = useParams();
@@ -242,13 +243,14 @@ const ProductPage = () => {
               onTouchMove={handlePointerMove}
               onTouchEnd={handlePointerUp}
             >
-              <img
+              <ResponsiveImage
                 src={galleryImages[activeImageIndex] || product.image}
                 alt={product.name}
                 className="w-full h-full object-cover"
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
+                sizes="(min-width: 1024px) 50vw, 100vw"
               />
               {galleryImages.length > 1 && (
                 <div className="absolute bottom-3 left-3 bg-black/70 text-white/70 text-xs px-2 py-1">
@@ -265,12 +267,13 @@ const ProductPage = () => {
                     onClick={() => setActiveImageIndex(index)}
                     className={`border ${index === activeImageIndex ? "border-gold" : "border-white/10"} bg-white/5`}
                   >
-                    <img
+                    <ResponsiveImage
                       src={src}
                       alt={`${product.name} view ${index + 1}`}
                       className="w-full h-16 object-cover"
                       loading="lazy"
                       decoding="async"
+                      sizes="96px"
                     />
                   </button>
                 ))}
@@ -423,12 +426,13 @@ const ProductPage = () => {
                   className="text-left border border-white/10 bg-white/5 hover:border-gold/50 transition-colors"
                 >
                   <div className="aspect-[4/3] overflow-hidden">
-                    <img
+                    <ResponsiveImage
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover"
                       loading="lazy"
                       decoding="async"
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     />
                   </div>
                   <div className="p-3">

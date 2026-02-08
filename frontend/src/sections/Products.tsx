@@ -11,6 +11,7 @@ import { products } from '@/data/products';
 import type { Product } from '@/types';
 import { formatPkr } from '@/lib/currency';
 import { fetchProductAvailability } from '@/lib/product-availability';
+import ResponsiveImage from '@/components/responsive-image';
 
 const Products: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'jewellery'>('all');
@@ -226,12 +227,13 @@ const Products: React.FC = () => {
                     <>
                 {/* Image */}
                 <div className="relative aspect-[3/4] overflow-hidden">
-                  <img
+                  <ResponsiveImage
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                     decoding="async"
+                    sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   />
                   
                   {/* Overlay */}
@@ -360,12 +362,13 @@ const Products: React.FC = () => {
                 return (
                   <>
               <div className="aspect-square overflow-hidden">
-                <img
+                <ResponsiveImage
                   src={selectedProduct.image}
                   alt={selectedProduct.name}
                   className="w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"
+                  sizes="(min-width: 768px) 50vw, 100vw"
                 />
               </div>
               <div className="space-y-3 sm:space-y-4">
