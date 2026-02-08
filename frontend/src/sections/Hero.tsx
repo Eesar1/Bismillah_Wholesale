@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Sparkles, Gem, Shirt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Wrapper from '@/components/wrapper';
-import ResponsiveImage from '@/components/responsive-image';
 
 interface HeroProps {
   onExploreProducts: () => void;
@@ -94,14 +93,13 @@ const Hero: React.FC<HeroProps> = ({ onExploreProducts }) => {
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
-        <ResponsiveImage
+        <img
           src="/images/hero-bg.jpg"
           alt="Luxury Boutique"
           className="w-full h-full object-cover"
           loading="eager"
           fetchPriority="high"
           decoding="async"
-          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
