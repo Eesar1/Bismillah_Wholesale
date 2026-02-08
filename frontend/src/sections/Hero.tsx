@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Sparkles, Gem, Shirt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Wrapper from '@/components/wrapper';
-import gsap from 'gsap';
 
 interface HeroProps {
   onExploreProducts: () => void;
@@ -15,60 +14,79 @@ const Hero: React.FC<HeroProps> = ({ onExploreProducts }) => {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    // GSAP animations for floating elements
-    if (gemRef.current) {
-      gsap.to(gemRef.current, {
-        y: -15,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-    }
+    let isActive = true;
 
-    if (sparklesRef.current) {
-      gsap.to(sparklesRef.current, {
-        y: 15,
-        duration: 3.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: 0.5,
-      });
-    }
+    const initAnimations = async () => {
+      const { default: gsap } = await import('gsap');
+      if (!isActive) return;
 
-    // GSAP text reveal animation
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    
-    tl.fromTo('.hero-badge', 
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8 }
-    )
-    .fromTo('.hero-title span',
-      { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 1, stagger: 0.1 },
-      '-=0.4'
-    )
-    .fromTo('.hero-subtitle',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8 },
-      '-=0.6'
-    )
-    .fromTo('.hero-stats',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8 },
-      '-=0.4'
-    )
-    .fromTo('.hero-buttons',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8 },
-      '-=0.4'
-    )
-    .fromTo('.hero-categories',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8 },
-      '-=0.4'
-    );
+      // GSAP animations for floating elements
+      if (gemRef.current) {
+        gsap.to(gemRef.current, {
+          y: -15,
+          duration: 3,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+      }
+
+      if (sparklesRef.current) {
+        gsap.to(sparklesRef.current, {
+          y: 15,
+          duration: 3.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 0.5,
+        });
+      }
+
+      // GSAP text reveal animation
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      tl.fromTo(
+        '.hero-badge',
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8 }
+      )
+        .fromTo(
+          '.hero-title span',
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 1, stagger: 0.1 },
+          '-=0.4'
+        )
+        .fromTo(
+          '.hero-subtitle',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          '-=0.6'
+        )
+        .fromTo(
+          '.hero-stats',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          '-=0.4'
+        )
+        .fromTo(
+          '.hero-buttons',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          '-=0.4'
+        )
+        .fromTo(
+          '.hero-categories',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          '-=0.4'
+        );
+    };
+
+    void initAnimations();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   return (
@@ -80,6 +98,8 @@ const Hero: React.FC<HeroProps> = ({ onExploreProducts }) => {
           alt="Luxury Boutique"
           className="w-full h-full object-cover"
           loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />

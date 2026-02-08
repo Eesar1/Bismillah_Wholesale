@@ -11,10 +11,6 @@ import { products } from '@/data/products';
 import type { Product } from '@/types';
 import { formatPkr } from '@/lib/currency';
 import { fetchProductAvailability } from '@/lib/product-availability';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Products: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'jewellery'>('all');
@@ -50,40 +46,58 @@ const Products: React.FC = () => {
 
   // GSAP ScrollTrigger animation
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.products-header',
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.products-header',
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+    let isActive = true;
+    let ctx: import('gsap').Context | undefined;
 
-      gsap.fromTo('.category-filter',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          delay: 0.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.category-filter',
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, sectionRef);
+    const initAnimations = async () => {
+      const { default: gsap } = await import('gsap');
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      if (!isActive) return;
 
-    return () => ctx.revert();
+      gsap.registerPlugin(ScrollTrigger);
+
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          '.products-header',
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.products-header',
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
+
+        gsap.fromTo(
+          '.category-filter',
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            delay: 0.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.category-filter',
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
+      }, sectionRef);
+    };
+
+    void initAnimations();
+
+    return () => {
+      isActive = false;
+      ctx?.revert();
+    };
   }, []);
 
   useEffect(() => {
@@ -217,6 +231,7 @@ const Products: React.FC = () => {
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
+                    decoding="async"
                   />
                   
                   {/* Overlay */}
@@ -349,6 +364,8 @@ const Products: React.FC = () => {
                   src={selectedProduct.image}
                   alt={selectedProduct.name}
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div className="space-y-3 sm:space-y-4">

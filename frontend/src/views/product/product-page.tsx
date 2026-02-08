@@ -246,6 +246,9 @@ const ProductPage = () => {
                 src={galleryImages[activeImageIndex] || product.image}
                 alt={product.name}
                 className="w-full h-full object-cover"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
               {galleryImages.length > 1 && (
                 <div className="absolute bottom-3 left-3 bg-black/70 text-white/70 text-xs px-2 py-1">
@@ -262,7 +265,13 @@ const ProductPage = () => {
                     onClick={() => setActiveImageIndex(index)}
                     className={`border ${index === activeImageIndex ? "border-gold" : "border-white/10"} bg-white/5`}
                   >
-                    <img src={src} alt={`${product.name} view ${index + 1}`} className="w-full h-16 object-cover" />
+                    <img
+                      src={src}
+                      alt={`${product.name} view ${index + 1}`}
+                      className="w-full h-16 object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </button>
                 ))}
               </div>
@@ -414,7 +423,13 @@ const ProductPage = () => {
                   className="text-left border border-white/10 bg-white/5 hover:border-gold/50 transition-colors"
                 >
                   <div className="aspect-[4/3] overflow-hidden">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                   <div className="p-3">
                     <p className="text-white text-sm font-semibold line-clamp-1">{item.name}</p>
