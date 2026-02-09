@@ -5,6 +5,7 @@ import Wrapper from "@/components/wrapper";
 import { getProductBySlug, products } from "@/data/products";
 import { useCart } from "@/hooks/use-cart";
 import { formatPkr } from "@/lib/currency";
+import { applySeo, removeJsonLd, restoreDefaultSeo, upsertJsonLd } from "@/lib/seo";
 import { fetchProductAvailability } from "@/lib/product-availability";
 import { fetchProductReviews, submitProductReview, type ProductReview, type RatingSummary } from "@/lib/reviews";
 import type { Product } from "@/types";
@@ -12,6 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+
+const SITE_URL = "https://bismillah-wholesale-pm9g.vercel.app";
+const FALLBACK_IMAGE_URL = `${SITE_URL}/images/hero-bg.jpg`;
 
 const ProductPage = () => {
   const { slug } = useParams();
@@ -118,6 +122,78 @@ const ProductPage = () => {
     const timer = window.setTimeout(() => setIsReady(true), 40);
     return () => window.clearTimeout(timer);
   }, [slug]);
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+
+    const isSoldOut = !product.inStock || product.stockQuantity <= 0;
+    const productUrl = `${SITE_URL}/product/${product.slug}`;
+    const productImageUrl = product.image ? `${SITE_URL}${product.image}` : FALLBACK_IMAGE_URL;
+    const categoryLabel = product.category === "clothing" ? "Clothing" : "Jewellery";
+    const title = `${product.name} | ${categoryLabel} Wholesale - Bismillah Wholesale`;
+    const description = `${product.description} Bulk pricing available in Pakistan. Starting from ${formatPkr(product.price)} with minimum order ${product.minOrderQuantity}.`;
+    const keywords = Array.from(
+      new Set([
+        ...product.tags,
+        product.name,
+        "bismillah wholesale",
+        `${categoryLabel.toLowerCase()} wholesale`,
+        "pakistan wholesale supplier",
+      ]),
+    ).join(", ");
+
+    applySeo({
+      title,
+      canonicalUrl: productUrl,
+      meta: [
+        { attr: "name", key: "title", content: title },
+        { attr: "name", key: "description", content: description },
+        { attr: "name", key: "keywords", content: keywords },
+        { attr: "property", key: "og:type", content: "product" },
+        { attr: "property", key: "og:url", content: productUrl },
+        { attr: "property", key: "og:title", content: title },
+        { attr: "property", key: "og:description", content: description },
+        { attr: "property", key: "og:image", content: productImageUrl },
+        { attr: "property", key: "twitter:url", content: productUrl },
+        { attr: "property", key: "twitter:title", content: title },
+        { attr: "property", key: "twitter:description", content: description },
+        { attr: "property", key: "twitter:image", content: productImageUrl },
+      ],
+    });
+
+    upsertJsonLd("product-json-ld", {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      image: productImageUrl,
+      sku: product.sku,
+      category: categoryLabel,
+      brand: {
+        "@type": "Brand",
+        name: "Bismillah Wholesale",
+      },
+      offers: {
+        "@type": "Offer",
+        url: productUrl,
+        priceCurrency: "PKR",
+        price: product.price,
+        availability: isSoldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: Number(summary.average.toFixed(1)),
+        reviewCount: summary.count,
+      },
+    });
+
+    return () => {
+      removeJsonLd("product-json-ld");
+      restoreDefaultSeo();
+    };
+  }, [product, summary.average, summary.count]);
 
 
   const handleAddToCart = () => {
