@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://bismillah-wholesale-pm9g.vercel.app/sitemap.xml
