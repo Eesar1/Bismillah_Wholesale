@@ -150,7 +150,8 @@ const syncInventory = async () => {
 
     const nextName = product.name;
     const nextStock = Math.max(0, Number(existing.stockQuantity ?? 0));
-    const nextInStock = nextStock > 0;
+    const existingInStock = typeof existing.inStock === "boolean" ? existing.inStock : true;
+    const nextInStock = Boolean(existingInStock) && nextStock > 0;
     const nameChanged = existing.name !== nextName;
 
     if (nameChanged || existing.inStock !== nextInStock || existing.stockQuantity !== nextStock) {

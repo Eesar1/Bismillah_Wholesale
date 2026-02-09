@@ -29,10 +29,13 @@ const parseJson = (raw) => {
 const normalizeInventory = (inventory) => {
   return inventory.map((item) => {
     const stockQuantity = Math.max(0, Number(item?.stockQuantity || 0));
+    const hasManualInStock = typeof item?.inStock === "boolean";
+    const inStock = hasManualInStock ? Boolean(item.inStock) && stockQuantity > 0 : stockQuantity > 0;
+
     return {
       ...item,
       stockQuantity,
-      inStock: stockQuantity > 0,
+      inStock,
     };
   });
 };
@@ -177,8 +180,9 @@ export const getAvailabilityMap = async () => {
 
   return inventory.reduce((acc, item) => {
     const stockQuantity = Math.max(0, Number(item.stockQuantity || 0));
+    const inStock = Boolean(item.inStock) && stockQuantity > 0;
     acc[item.id] = {
-      inStock: stockQuantity > 0,
+      inStock,
       stockQuantity,
     };
     return acc;
@@ -211,7 +215,8 @@ export const reserveInventoryForOrder = async (items) => {
     }
 
     const availableStock = Math.max(0, Number(productInventory?.stockQuantity || 0));
-    const isAvailable = availableStock >= quantity;
+    const isEnabled = Boolean(productInventory?.inStock) && availableStock > 0;
+    const isAvailable = isEnabled && availableStock >= quantity;
 
     if (!isAvailable) {
       unavailable.push(item?.product?.name || productId);
