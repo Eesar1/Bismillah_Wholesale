@@ -133,7 +133,7 @@ const ProductPage = () => {
     const productImageUrl = product.image ? `${SITE_URL}${product.image}` : FALLBACK_IMAGE_URL;
     const categoryLabel = product.category === "clothing" ? "Clothing" : "Jewellery";
     const title = `${product.name} | ${categoryLabel} Wholesale - Bismillah Wholesale`;
-    const description = `${product.description} Bulk pricing available in Pakistan. Starting from ${formatPkr(product.price)} with minimum order ${product.minOrderQuantity}.`;
+    const description = `${product.description} Bulk pricing available in Pakistan. Starting from ${formatPkr(product.price)}.`;
     const keywords = Array.from(
       new Set([
         ...product.tags,
@@ -379,7 +379,6 @@ const ProductPage = () => {
             <div className="text-sm text-white/70 space-y-1">
               <div>SKU: <span className="text-white">{product.sku}</span></div>
               <div>Stock: <span className={isSoldOut ? "text-red-400" : "text-white"}>{isSoldOut ? "Sold Out" : `${product.stockQuantity} available`}</span></div>
-              <div>Minimum Order: <span className="text-white">{product.minOrderQuantity}</span></div>
             </div>
 
             <Button

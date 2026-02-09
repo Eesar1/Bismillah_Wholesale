@@ -13,7 +13,10 @@ import { formatPkr } from '@/lib/currency';
 import { fetchProductAvailability } from '@/lib/product-availability';
 
 const Products: React.FC = () => {
+  const INITIAL_VISIBLE_PRODUCTS = 10;
+  const LOAD_MORE_STEP = 4;
   const [activeCategory, setActiveCategory] = useState<'all' | 'jewellery'>('all');
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_PRODUCTS);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [availabilityMap, setAvailabilityMap] = useState<Record<string, { inStock: boolean; stockQuantity: number }>>({});
   const { addToCart } = useCart();
@@ -43,6 +46,17 @@ const Products: React.FC = () => {
 
     return mergedProducts.filter((product) => product.category === activeCategory);
   }, [activeCategory, mergedProducts]);
+
+  const visibleProducts = useMemo(
+    () => displayedProducts.slice(0, visibleCount),
+    [displayedProducts, visibleCount]
+  );
+
+  const hasMoreProducts = visibleCount < displayedProducts.length;
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
+  }, [activeCategory]);
 
   // GSAP ScrollTrigger animation
   useEffect(() => {
@@ -210,7 +224,7 @@ const Products: React.FC = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
         >
           <AnimatePresence mode="popLayout">
-            {displayedProducts.map((product) => (
+            {visibleProducts.map((product) => (
               <motion.div
                 key={product.id}
                 variants={itemVariants}
@@ -326,23 +340,24 @@ const Products: React.FC = () => {
           </div>
         )}
 
-        {/* View All Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-8 sm:mt-12"
-        >
-          <Button
-            variant="outline"
-            onClick={() => setActiveCategory('all')}
-            className="border-gold text-gold hover:bg-gold hover:text-black rounded-none px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base"
+        {hasMoreProducts && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-center mt-8 sm:mt-12"
           >
-            View All Products
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-          </Button>
-        </motion.div>
+            <Button
+              variant="outline"
+              onClick={() => setVisibleCount((current) => current + LOAD_MORE_STEP)}
+              className="border-gold text-gold hover:bg-gold hover:text-black rounded-none px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base"
+            >
+              View More Products
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+            </Button>
+          </motion.div>
+        )}
       </Wrapper>
 
       {/* Product Detail Dialog */}

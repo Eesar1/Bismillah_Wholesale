@@ -11,7 +11,6 @@ export interface Product {
   images?: string[];
   inStock: boolean;
   stockQuantity: number;
-  minOrderQuantity: number;
   sku: string;
   tags: string[];
   rating?: number;
