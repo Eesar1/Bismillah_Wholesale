@@ -194,7 +194,7 @@ const Checkout: React.FC<CheckoutProps> = ({ isOpen, onClose, onComplete }) => {
                     value={customerInfo.phone}
                     onChange={handleCustomerInfoChange}
                     className="bg-white/5 border-white/20 text-white focus:border-gold rounded-none text-sm"
-                    placeholder="+92 300 1234567"
+                    placeholder="+44 7344 231811"
                   />
                 </div>
                 <div className="space-y-2">

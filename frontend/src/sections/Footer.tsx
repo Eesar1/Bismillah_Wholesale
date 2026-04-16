@@ -1,15 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Crown, Instagram, Facebook, Twitter, Linkedin, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
-import Wrapper from '@/components/wrapper';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  Crown,
+  Instagram,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPin,
+  ArrowUp,
+} from "lucide-react";
+import Wrapper from "@/components/wrapper";
 
 interface FooterProps {
   onNavigate: (section: string) => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
+  const [currentYear, setCurrentYear] = useState(() =>
+    new Date().getFullYear(),
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,28 +29,28 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const quickLinks = [
-    { label: 'Home', section: 'hero' },
-    { label: 'Products', section: 'products' },
-    { label: 'About Us', section: 'about' },
-    { label: 'Contact', section: 'contact' },
+    { label: "Home", section: "hero" },
+    { label: "Products", section: "products" },
+    { label: "About Us", section: "about" },
+    { label: "Contact", section: "contact" },
   ];
 
   const categories = [
-    { label: 'Necklaces', category: 'jewellery' },
-    { label: 'Earrings', category: 'jewellery' },
-    { label: 'Bracelets', category: 'jewellery' },
-    { label: 'Rings', category: 'jewellery' },
+    { label: "Necklaces", category: "jewellery" },
+    { label: "Earrings", category: "jewellery" },
+    { label: "Bracelets", category: "jewellery" },
+    { label: "Rings", category: "jewellery" },
   ];
 
   const socialLinks = [
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
   ];
 
   return (
@@ -53,16 +65,19 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div>
                 <span
                   className="text-base sm:text-xl font-bold text-gold tracking-wider block"
-                  style={{ fontFamily: 'Playfair Display, serif' }}
+                  style={{ fontFamily: "Playfair Display, serif" }}
                 >
                   BISMILLAH
                 </span>
-                <span className="text-[10px] sm:text-xs text-gold/60 tracking-widest">WHOLESALE</span>
+                <span className="text-[10px] sm:text-xs text-gold/60 tracking-widest">
+                  WHOLESALE
+                </span>
               </div>
             </div>
             <p className="text-white/60 mb-4 sm:mb-6 leading-relaxed text-xs sm:text-sm">
-              Your premier destination for luxury jewellery and designer clothing wholesale. 
-              Quality, elegance, and exceptional service since 2014.
+              Your premier destination for luxury jewellery and designer
+              clothing wholesale. Quality, elegance, and exceptional service
+              since 2014.
             </p>
             <div className="flex gap-2 sm:gap-3">
               {socialLinks.map((social) => (
@@ -80,7 +95,9 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-3 sm:mb-6 text-sm sm:text-base">Quick Links</h4>
+            <h4 className="text-white font-semibold mb-3 sm:mb-6 text-sm sm:text-base">
+              Quick Links
+            </h4>
             <ul className="space-y-2 sm:space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.section}>
@@ -97,12 +114,14 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Categories */}
           <div>
-            <h4 className="text-white font-semibold mb-3 sm:mb-6 text-sm sm:text-base">Categories</h4>
+            <h4 className="text-white font-semibold mb-3 sm:mb-6 text-sm sm:text-base">
+              Categories
+            </h4>
             <ul className="space-y-2 sm:space-y-3">
               {categories.map((cat) => (
                 <li key={cat.label}>
                   <button
-                    onClick={() => onNavigate('products')}
+                    onClick={() => onNavigate("products")}
                     className="text-white/60 hover:text-gold transition-colors text-xs sm:text-sm"
                   >
                     {cat.label}
@@ -114,22 +133,29 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-white font-semibold mb-3 sm:mb-6 text-sm sm:text-base">Contact Us</h4>
+            <h4 className="text-white font-semibold mb-3 sm:mb-6 text-sm sm:text-base">
+              Contact Us
+            </h4>
             <ul className="space-y-3 sm:space-y-4">
               <li className="flex items-start gap-2 sm:gap-3">
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gold flex-shrink-0 mt-0.5" />
                 <span className="text-white/60 text-xs sm:text-sm">
-                  123 Business Avenue<br />
+                  123 Business Avenue
+                  <br />
                   Lahore, Pakistan
                 </span>
               </li>
               <li className="flex items-center gap-2 sm:gap-3">
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-gold flex-shrink-0" />
-                <span className="text-white/60 text-xs sm:text-sm">+92 300 1234567</span>
+                <span className="text-white/60 text-xs sm:text-sm">
+                  +44 7344 231811
+                </span>
               </li>
               <li className="flex items-center gap-2 sm:gap-3">
                 <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gold flex-shrink-0" />
-                <span className="text-white/60 text-xs sm:text-sm">info@bismillahwholesale.com</span>
+                <span className="text-white/60 text-xs sm:text-sm">
+                  bismillahwholesale110@gmail.com
+                </span>
               </li>
             </ul>
           </div>
@@ -141,8 +167,8 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <Wrapper className="py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             <p className="text-white/40 text-xs sm:text-sm text-center sm:text-left">
-              Copyright{' '}
-              <span suppressHydrationWarning>{currentYear}</span> Bismillah Wholesale. All rights reserved.
+              Copyright <span suppressHydrationWarning>{currentYear}</span>{" "}
+              Bismillah Wholesale. All rights reserved.
             </p>
             <div className="flex items-center gap-4 sm:gap-6">
               <button
